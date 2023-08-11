@@ -11,8 +11,11 @@ jobs:
     runs-on: ${{ matrix.config.os }}
     name: ${{ matrix.config.name }}
     steps:
+      - name: Get number of CPU cores
+        uses: SimenB/github-actions-cpu-cores@v1
+        id: cpu-cores
       - name: Check out repository code
         uses: actions/checkout@v3
-      - run: make -j$(nproc) test
-      - run: make -j$(nproc) release
-      - run: make -j$(nproc) perft
+      - run: make -j${{ steps.cpu-cores.outputs.count }} test
+      - run: make -j${{ steps.cpu-cores.outputs.count }} release
+      - run: make -j${{ steps.cpu-cores.outputs.count }} perft
